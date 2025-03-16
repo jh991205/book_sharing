@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import Post from "../../components/posts";
+import Navigation from "../../components/Navigation";
+import Post from "../../components/Post";
 
 export default function Home() {
   const dummyPosts = [
@@ -21,25 +21,7 @@ export default function Home() {
 
   return (
     <div>
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container">
-          <Link className="navbar-brand" to="/">
-            Books Website
-          </Link>
-          <div className="collapse navbar-collapse">
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      {/* Content */}
+      <Navigation />
       <div className="container mt-5">
         {isLoggedIn ? (
           <p>(You can render logged-in user’s personalized posts here later)</p>
