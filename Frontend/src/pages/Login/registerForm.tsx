@@ -1,8 +1,6 @@
-export default function RegisterForm() {
-  const handleRegister = () => {
-    console.log("Register clicked");
-  };
+import { Link } from "react-router-dom";
 
+export default function RegisterForm() {
   return (
     <div>
       <h3 className="text-center mb-4">Register</h3>
@@ -51,13 +49,9 @@ export default function RegisterForm() {
             placeholder="Confirm Password"
           />
         </div>
-        <button
-          type="button"
-          className="btn btn-success w-100"
-          onClick={handleRegister}
-        >
+        <Link to="/" className="btn btn-success w-100">
           Register
-        </button>
+        </Link>
       </form>
     </div>
   );
