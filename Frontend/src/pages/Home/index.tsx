@@ -17,22 +17,22 @@ export default function Home() {
     },
   ];
 
-  const isLoggedIn = false;
+  const isLoggedIn = false; // change this to true to test the logged-in view
 
   return (
     <div>
       <Navigation />
       <div className="container mt-5">
-        {isLoggedIn ? (
-          <p>(You can render logged-in user’s personalized posts here later)</p>
-        ) : (
+        {isLoggedIn && (
           <>
-            <h2>Popular Posts</h2>
-            {dummyPosts.map((post, index) => (
-              <Post key={index} title={post.title} summary={post.summary} />
-            ))}
+            <h2>Your Personalized Posts</h2>
+            <p>(Render logged-in user’s personalized posts here later)</p>
           </>
         )}
+        <h2>Popular Posts</h2>
+        {dummyPosts.map((post, index) => (
+          <Post key={index} title={post.title} summary={post.summary} />
+        ))}
       </div>
     </div>
   );
