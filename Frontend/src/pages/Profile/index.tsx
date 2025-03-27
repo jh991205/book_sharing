@@ -1,48 +1,11 @@
 import { Link } from "react-router-dom";
+import Navigation from "../../components/Navigation";
+import Footer from "../../components/Footer";
 
 export default function Profile() {
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-        <div className="container">
-          <Link className="navbar-brand" to="/">
-            {/* <img
-              src="/logo.png" // Replace with your logo path
-              alt="Book Haven Logo"
-              width="30"
-              height="30"
-              className="d-inline-block align-top me-2"
-            /> */}
-            Book Haven
-          </Link>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/search">
-                  Search
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/profile">
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/logout">
-                  Logout
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
+      <Navigation />
       <div className="container mt-4">
         <h2 className="text-center mb-4">My Profile (Editable)</h2>
 
@@ -71,18 +34,7 @@ export default function Profile() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-light border-top mt-4 py-3">
-        <div className="container text-center">
-          <Link className="text-decoration-none me-3" to="/privacy">
-            Privacy Policy
-          </Link>
-          <Link className="text-decoration-none" to="/contact">
-            Contact
-          </Link>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
