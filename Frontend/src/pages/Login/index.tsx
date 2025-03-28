@@ -1,6 +1,7 @@
 import { useState } from "react";
 import LoginForm from "./loginForm";
 import RegisterForm from "./registerForm";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
@@ -29,6 +30,9 @@ export default function Login() {
           >
             Register
           </button>
+          <Link to="/profile" className="btn btn-outline-secondary">
+            Profile
+          </Link>
         </div>
 
         {activeTab === "login" ? <LoginForm /> : <RegisterForm />}
