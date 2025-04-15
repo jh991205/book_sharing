@@ -1,13 +1,48 @@
-const express = require("express");
-const app = express();
-const PORT = process.env.PORT || 3000;
+import express from "express";
 
+import UserRoutes from "./Users/routes.js";
+import BookRoutes from "./BookDetails/routes.js";
+import ReviewRoutes from "./Reviews/routes.js";
+
+import dotenv from "dotenv";
+import cors from "cors";
+import "dotenv/config";
+import session from "express-session";
+import mongoose from "mongoose";
+
+const CONNECTION_STRING =
+  process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz";
+mongoose.connect(CONNECTION_STRING);
+
+const app = express();
+
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.NETLIFY_URL || "http://localhost:5173",
+  })
+);
+
+const sessionOptions = {
+  secret: process.env.SESSION_SECRET || "kambaz",
+  resave: false,
+  saveUninitialized: false,
+};
+
+if (process.env.NODE_ENV !== "development") {
+  sessionOptions.proxy = true;
+  sessionOptions.cookie = {
+    sameSite: "none",
+    secure: true,
+    domain: process.env.NODE_SERVER_DOMAIN,
+  };
+}
+
+app.use(session(sessionOptions));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello, Express!");
-});
+UserRoutes(app);
+BookRoutes(app);
+ReviewRoutes(app);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.listen(process.env.PORT || 4001);
