@@ -19,13 +19,3 @@ export const updateReview = (id, updatedReview) =>
 
 // DELETE
 export const deleteReview = (id) => model.deleteOne({ _id: id });
-
-export default {
-  createReview,
-  findAllReviews,
-  findReviewById,
-  findReviewsByUser,
-  findReviewsByBook,
-  updateReview,
-  deleteReview,
-};

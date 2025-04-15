@@ -13,11 +13,3 @@ export const updateBook = (id, updatedBook) =>
 
 // DELETE
 export const deleteBook = (id) => model.deleteOne({ _id: id });
-
-export default {
-  createBook,
-  findAllBooks,
-  findBookById,
-  updateBook,
-  deleteBook,
-};
