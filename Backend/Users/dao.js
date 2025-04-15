@@ -26,19 +26,4 @@ export const unfollowUser = (userId, unfollowId) =>
 
 // Optional: populate followingList with user details
 export const getUserWithFollowing = (userId) =>
-  model
-    .findById(userId)
-    .populate("followingList", "username firstName lastName");
-
-export default {
-  createUser,
-  findAllUsers,
-  findUserById,
-  findUserByUsername,
-  findUserByCredentials,
-  updateUser,
-  deleteUser,
-  followUser,
-  unfollowUser,
-  getUserWithFollowing,
-};
+  model.findById(userId).populate("followingList");

@@ -4,7 +4,6 @@ import UserRoutes from "./Users/routes.js";
 import BookRoutes from "./BookDetails/routes.js";
 import ReviewRoutes from "./Reviews/routes.js";
 
-import dotenv from "dotenv";
 import cors from "cors";
 import "dotenv/config";
 import session from "express-session";
