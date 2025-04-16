@@ -1,6 +1,6 @@
 import { useState } from "react";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
+import LoginForm from "./loginForm";
+import RegisterForm from "./registerForm";
 import { Box, Button, ButtonGroup, Paper } from "@mui/material";
 
 export default function Login() {

@@ -21,8 +21,9 @@ export default function ReviewRoutes(app) {
     res.json(reviews);
   };
 
+  // Updated: 'bookTitle' now is used as the identifier for the book
   const findReviewsByBook = async (req, res) => {
-    const reviews = await dao.findReviewsByBook(req.params.bookId);
+    const reviews = await dao.findReviewsByBook(req.params.bookTitle);
     res.json(reviews);
   };
 
@@ -41,7 +42,8 @@ export default function ReviewRoutes(app) {
   app.get("/api/reviews", findAllReviews);
   app.get("/api/reviews/:reviewId", findReviewById);
   app.get("/api/reviews/user/:userId", findReviewsByUser);
-  app.get("/api/reviews/book/:bookId", findReviewsByBook);
+  // Note: use /api/reviews/book/:bookTitle so that clients pass a canonical book title.
+  app.get("/api/reviews/book/:bookTitle", findReviewsByBook);
   app.put("/api/reviews/:reviewId", updateReview);
   app.delete("/api/reviews/:reviewId", deleteReview);
 }
