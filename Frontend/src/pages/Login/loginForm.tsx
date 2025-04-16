@@ -1,42 +1,51 @@
+import { useState } from "react";
+import { TextField, Button, Typography, Box } from "@mui/material";
+import { loginUser } from "../../util";
+import { useNavigate } from "react-router-dom";
+
 export default function LoginForm() {
-  const handleLogin = () => {
-    console.log("Login clicked");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const user = await loginUser(email, password);
+      alert(`Welcome ${user.firstName}`);
+      navigate("/profile");
+    } catch (err) {
+      alert("Login failed");
+    }
   };
 
   return (
-    <div>
-      <h3 className="text-center mb-4">Login</h3>
-      <form>
-        <div className="mb-3">
-          <label htmlFor="login-email" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="login-email"
-            placeholder="name@example.com"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="login-password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="login-password"
-            placeholder="Password"
-          />
-        </div>
-        <button
-          type="button"
-          className="btn btn-primary w-100"
-          onClick={handleLogin}
-        >
-          Login
-        </button>
-      </form>
-    </div>
+    <Box>
+      <Typography variant="h5" align="center" gutterBottom>
+        Login
+      </Typography>
+      <TextField
+        label="Email"
+        fullWidth
+        margin="normal"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={handleLogin}
+        sx={{ mt: 2 }}
+      >
+        Login
+      </Button>
+    </Box>
   );
 }
