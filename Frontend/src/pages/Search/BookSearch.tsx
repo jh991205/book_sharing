@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import * as bookClient from "./client";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import Navigation from "../../components/Navigation";
 
 export default function BookSearch() {
   const bestBooks = [
@@ -63,6 +64,7 @@ export default function BookSearch() {
   }, [keyword]);
   return (
     <div>
+      <Navigation />
       <h2>Book Search</h2>
       {/* Dropdown for selecting one of the best books */}
       <select

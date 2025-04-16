@@ -4,7 +4,7 @@ import { registerUser } from "../../util";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -18,11 +18,11 @@ export default function RegisterForm() {
 
     try {
       const user = await registerUser({
-        email: email,
+        username,
         password,
-        firstName: name,
+        email,
       });
-      alert(`Welcome ${user.firstName}`);
+      alert(`Welcome ${user.username}`);
       navigate("/profile");
     } catch (err) {
       alert("Registration failed");
@@ -35,14 +35,14 @@ export default function RegisterForm() {
         Register
       </Typography>
       <TextField
-        label="Name"
+        label="username"
         fullWidth
         margin="normal"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <TextField
-        label="Email"
+        label="email"
         fullWidth
         margin="normal"
         value={email}

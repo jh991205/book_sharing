@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import * as client from "./client"; // Adjust the path if needed
+import Navigation from "../../components/Navigation";
 
 export default function Details() {
   const { bookId } = useParams();
@@ -43,6 +44,7 @@ export default function Details() {
 
   return (
     <div className="container mt-4">
+      <Navigation />
       {bookDetail ? (
         <div className="row">
           {/* Book Cover Section */}
