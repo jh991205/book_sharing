@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useSearchParams } from "react-router-dom";
+import { FaStar, FaRegStar, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import * as client from "./client"; // Adjust the path if needed
 import Navigation from "../../components/Navigation";
 
@@ -41,6 +42,40 @@ export default function Details() {
     }
     fetchReviews();
   }, [bookDetail, canonicalTitle]);
+
+  const [tags, setTags] = useState<any[]>([]);
+
+  // Fetch all tags related to the reviews on this book
+  useEffect(() => {
+    async function fetchTags() {
+      if (reviews.length > 0) {
+        try {
+          const allTags = await Promise.all(
+            reviews.map((r) => client.getTagsForReview(r._id))
+          );
+          const flattened = allTags.flat();
+          setTags(flattened);
+        } catch (error) {
+          console.error("Error fetching tags:", error);
+        }
+      }
+    }
+    fetchTags();
+  }, [reviews]);
+
+  // Helper: count tags for a review
+  const countTags = (reviewId: string, type: "like" | "dislike") =>
+    tags.filter((tag) => tag.review === reviewId && tag.type === type).length;
+
+  // Helper: display stars
+  const renderStars = (count: number) =>
+    Array.from({ length: 5 }, (_, i) =>
+      i < count ? (
+        <FaStar key={i} color="gold" />
+      ) : (
+        <FaRegStar key={i} color="gray" />
+      )
+    );
 
   return (
     <div className="container mt-4">
@@ -97,14 +132,23 @@ export default function Details() {
           reviews.map((review) => (
             <div key={review._id} className="card mb-3">
               <div className="card-body">
-                <p>{review.contentReview}</p>
-                <p>
-                  <strong>Rating:</strong> {review.ratings}{" "}
-                  <span className="ms-2">
-                    <strong>Reviewed by:</strong>{" "}
-                    <Link to={`/profile/${review.user}`}>{review.user}</Link>
+                <div className="mb-2">
+                  {renderStars(review.ratings)}
+                  <span className="ms-3 text-muted">
+                    by <Link to={`/profile/${review.user}`}>{review.user}</Link>
                   </span>
-                </p>
+                </div>
+                <p>{review.contentReview}</p>
+                <div>
+                  <span className="me-3">
+                    <FaThumbsUp className="me-1" />{" "}
+                    {countTags(review._id, "like")}
+                  </span>
+                  <span>
+                    <FaThumbsDown className="me-1" />{" "}
+                    {countTags(review._id, "dislike")}
+                  </span>
+                </div>
               </div>
             </div>
           ))

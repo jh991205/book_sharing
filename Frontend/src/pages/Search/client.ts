@@ -1,4 +1,19 @@
 import axios from "axios";
+export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
+
+// 2) Fetch all stored book titles from our backend
+export const findAllBooks = async () => {
+  const response = await axios.get(`${REMOTE_SERVER}/api/books`);
+  return response.data;
+};
+
+// 3) Fetch partial matches from our backend
+export const findBooksByPartialTitle = async (name: string) => {
+  const response = await axios.get(
+    `${REMOTE_SERVER}/api/books/search/${encodeURIComponent(name)}`
+  );
+  return response.data;
+};
 
 // Use an environment variable or fallback to the public endpoint.
 const GOOGLE_BOOKS_API =

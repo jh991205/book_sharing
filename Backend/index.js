@@ -1,13 +1,14 @@
 import express from "express";
 
 import UserRoutes from "./Users/routes.js";
-import BookRoutes from "./BookDetails/routes.js";
+import BookRoutes from "./Books/routes.js";
 import ReviewRoutes from "./Reviews/routes.js";
 
 import cors from "cors";
 import "dotenv/config";
 import session from "express-session";
 import mongoose from "mongoose";
+import TagRoutes from "./Tags/routes.js";
 
 const CONNECTION_STRING =
   process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz";
@@ -43,5 +44,6 @@ app.use(express.json());
 UserRoutes(app);
 BookRoutes(app);
 ReviewRoutes(app);
+TagRoutes(app);
 
 app.listen(process.env.PORT || 4001);
