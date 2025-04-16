@@ -27,3 +27,10 @@ export const getReviewsForBook = async (bookTitle: string) => {
   const response = await axios.get(url);
   return response.data;
 };
+
+export const getTagsForReview = async (reviewId: string) => {
+  const response = await axios.get(
+    `${REMOTE_SERVER}/api/tags/review/${reviewId}`
+  );
+  return response.data;
+};

@@ -1,46 +1,9 @@
 import { useState, useEffect } from "react";
 import * as bookClient from "./client";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import Navigation from "../../components/Navigation";
+import BookFilter from "./BookFilter";
 
 export default function BookSearch() {
-  const bestBooks = [
-    "To Kill a Mockingbird",
-    "1984",
-    "Pride and Prejudice",
-    "The Great Gatsby",
-    "Moby-Dick",
-    "War and Peace",
-    "The Odyssey",
-    "Crime and Punishment",
-    "The Brothers Karamazov",
-    "One Hundred Years of Solitude",
-    "Ulysses",
-    "The Lord of the Rings",
-    "Anna Karenina",
-    "The Catcher in the Rye",
-    "The Grapes of Wrath",
-    "Brave New World",
-    "Wuthering Heights",
-    "Jane Eyre",
-    "The Divine Comedy",
-    "Don Quixote",
-    "Fahrenheit 451",
-    "The Iliad",
-    "Les Misérables",
-    "A Tale of Two Cities",
-    "Great Expectations",
-    "The Sound and the Fury",
-    "Lolita",
-    "Invisible Man",
-    "Beloved",
-    "Middlemarch",
-    "The Stranger",
-    "Catch-22",
-    "A Clockwork Orange",
-    "The Trial",
-    "Heart of Darkness",
-  ];
   const [query, setQuery] = useState("To Kill a Mockingbird");
   const [books, setBooks] = useState<any[]>([]);
   // Assume our route is defined as /search/:search? where "search" is an optional param
@@ -62,38 +25,26 @@ export default function BookSearch() {
       searchBooks(keyword);
     }
   }, [keyword]);
-  return (
-    <div>
-      <Navigation />
-      <h2>Book Search</h2>
-      {/* Dropdown for selecting one of the best books */}
-      <select
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="form-control mb-2"
-      >
-        {bestBooks.map((title, index) => (
-          <option key={index} value={title}>
-            {title}
-          </option>
-        ))}
-      </select>
-      <button
-        className="btn btn-primary"
-        onClick={async () => {
-          searchBooks();
-        }}
-      >
-        Search
-      </button>
 
-      {books && books.length > 0 && (
+  return (
+    <div className="d-flex">
+      {/* Sidebar: visible on md+ screens */}
+      <div className="d-none d-md-block" style={{ width: "300px" }}>
+        <BookFilter onSearch={searchBooks} />
+      </div>
+
+      {/* Main content area: scrollable */}
+      <div
+        className="flex-fill"
+        style={{ overflowY: "auto", maxHeight: "100vh", padding: "1rem" }}
+      >
+        <h2>Book Search</h2>
         <div className="row mt-4">
           {books
             .filter((book) => book.volumeInfo?.imageLinks?.thumbnail)
             .map((book) => (
-              <div key={book.id} className="col-4">
-                <div className="card h-100 mb-4">
+              <div key={book.id} className="col-4 mb-4">
+                <div className="card mb-2">
                   {book.volumeInfo?.imageLinks?.thumbnail && (
                     <img
                       src={book.volumeInfo.imageLinks.thumbnail}
@@ -108,21 +59,20 @@ export default function BookSearch() {
                         ? book.volumeInfo.description.substring(0, 100) + "..."
                         : "No description available."}
                     </p>
-
-                    <div className="mt-auto">
+                    <div className="mt-auto d-flex">
                       <a
                         href={book.volumeInfo.infoLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="btn btn-primary"
+                        className="btn btn-primary me-2"
                       >
                         More Info
                       </a>
                       <Link
                         to={`/details/${book.id}?query=${encodeURIComponent(
-                          query
+                          keyword || ""
                         )}`}
-                        className="btn btn-secondary ms-2"
+                        className="btn btn-secondary"
                       >
                         View Details
                       </Link>
@@ -132,7 +82,7 @@ export default function BookSearch() {
               </div>
             ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }
