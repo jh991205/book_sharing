@@ -1,4 +1,5 @@
 import * as dao from "./dao.js";
+import { v4 as uuidv4 } from "uuid";
 
 export default function UserRoutes(app) {
   // CREATE account (no session)
@@ -39,14 +40,24 @@ export default function UserRoutes(app) {
 
   // SIGNUP
   const signup = async (req, res) => {
-    const existing = await dao.findUserByUsername(req.body.username);
+    const existing = await dao.findUserByUsername(req.body.email);
     if (existing) {
-      res.status(400).json({ message: "Username already taken" });
+      res.status(400).json({ message: "Email already in use" });
       return;
     }
-    const newUser = await dao.createUser(req.body);
-    req.session.currentUser = newUser;
-    res.json(newUser);
+
+    const newUser = {
+      _id: uuidv4(),
+      username: req.body.email, // store email as username
+      email: req.body.email,
+      password: req.body.password,
+      firstName: req.body.firstName,
+      role: "USER",
+    };
+
+    const created = await dao.createUser(newUser);
+    req.session.currentUser = created;
+    res.json(created);
   };
 
   // SIGNIN

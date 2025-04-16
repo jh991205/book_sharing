@@ -1,35 +1,49 @@
+import { useEffect, useState } from "react";
 import Navigation from "../../components/Navigation";
 import Post from "../../components/Post";
+import { getProfile, getRandomBooks, User, Book } from "../../util";
 
 export default function Home() {
-  const dummyPosts = [
-    {
-      title: "Top 5 Fantasy Books",
-      summary: "Discover epic adventures and magic worlds...",
-    },
-    {
-      title: "Must-Read Sci-Fi Novels",
-      summary: "Explore the future with these thrilling reads...",
-    },
-    {
-      title: "Romance Classics",
-      summary: "Timeless love stories that never get old...",
-    },
-  ];
+  const [books, setBooks] = useState<Book[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const isLoggedIn = false;
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [user, books] = await Promise.all([
+          getProfile().catch(() => null),
+          getRandomBooks(),
+        ]);
+        setCurrentUser(user);
+        setBooks(books);
+      } catch (err) {
+        console.error("Error loading data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   return (
     <div>
       <Navigation />
       <div className="container mt-5">
-        {isLoggedIn ? (
-          <p>(You can render logged-in user’s personalized posts here later)</p>
+        {loading ? (
+          <p>Loading...</p>
+        ) : currentUser ? (
+          <p>Welcome back, {currentUser.firstName}!</p>
         ) : (
           <>
-            <h2>Popular Posts</h2>
-            {dummyPosts.map((post, index) => (
-              <Post key={index} title={post.title} summary={post.summary} />
+            <h2>Popular Books</h2>
+            {books.map((book) => (
+              <Post
+                key={book._id}
+                bookId={book._id}
+                title={book.name}
+                summary="Check out this book!"
+              />
             ))}
           </>
         )}

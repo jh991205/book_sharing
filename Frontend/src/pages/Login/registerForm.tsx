@@ -1,64 +1,77 @@
+import { useState } from "react";
+import { TextField, Button, Typography, Box } from "@mui/material";
+import { registerUser } from "../../util";
+import { useNavigate } from "react-router-dom";
+
 export default function RegisterForm() {
-  const handleRegister = () => {
-    console.log("Register clicked");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const navigate = useNavigate();
+
+  const handleRegister = async () => {
+    if (password !== confirm) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const user = await registerUser({
+        email: email,
+        password,
+        firstName: name,
+      });
+      alert(`Welcome ${user.firstName}`);
+      navigate("/profile");
+    } catch (err) {
+      alert("Registration failed");
+    }
   };
 
   return (
-    <div>
-      <h3 className="text-center mb-4">Register</h3>
-      <form>
-        <div className="mb-3">
-          <label htmlFor="register-name" className="form-label">
-            Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="register-name"
-            placeholder="Your Name"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="register-email" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="register-email"
-            placeholder="name@example.com"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="register-password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="register-password"
-            placeholder="Password"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="register-confirm" className="form-label">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="register-confirm"
-            placeholder="Confirm Password"
-          />
-        </div>
-        <button
-          type="button"
-          className="btn btn-success w-100"
-          onClick={handleRegister}
-        >
-          Register
-        </button>
-      </form>
-    </div>
+    <Box>
+      <Typography variant="h5" align="center" gutterBottom>
+        Register
+      </Typography>
+      <TextField
+        label="Name"
+        fullWidth
+        margin="normal"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextField
+        label="Email"
+        fullWidth
+        margin="normal"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <TextField
+        label="Confirm Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={confirm}
+        onChange={(e) => setConfirm(e.target.value)}
+      />
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={handleRegister}
+        sx={{ mt: 2 }}
+      >
+        Register
+      </Button>
+    </Box>
   );
 }
