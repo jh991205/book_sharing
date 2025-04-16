@@ -1,9 +1,9 @@
-const Search = () => {
+import BookSearch from "./BookSearch"; // adjust the path as needed
+
+export default function Search() {
   return (
     <div>
-      <h1>Search Pages</h1>
+      <BookSearch />
     </div>
   );
-};
-
-export default Search;
+}
