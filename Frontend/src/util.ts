@@ -3,7 +3,7 @@ export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export interface User {
   _id: string;
   username: string;
-  firstName: string;
+  email: string;
   role: string;
 }
 
@@ -44,9 +44,9 @@ export const loginUser = async (username: string, password: string) => {
 };
 
 export const registerUser = async (payload: {
-  email: string;
+  username: string;
   password: string;
-  firstName: string;
+  email: string;
 }) => {
   const res = await fetch(`${REMOTE_SERVER}/api/users/signup`, {
     method: "POST",

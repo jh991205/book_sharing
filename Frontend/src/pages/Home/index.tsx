@@ -33,7 +33,7 @@ export default function Home() {
         {loading ? (
           <p>Loading...</p>
         ) : currentUser ? (
-          <p>Welcome back, {currentUser.firstName}!</p>
+          <p>Welcome back, {currentUser.username}!</p>
         ) : (
           <>
             <h2>Popular Books</h2>

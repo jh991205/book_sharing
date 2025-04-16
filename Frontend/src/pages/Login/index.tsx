@@ -2,12 +2,14 @@ import { useState } from "react";
 import LoginForm from "./loginForm";
 import RegisterForm from "./registerForm";
 import { Box, Button, ButtonGroup, Paper } from "@mui/material";
+import Navigation from "../../components/Navigation";
 
 export default function Login() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 400, margin: "auto", mt: 6 }}>
+      <Navigation />
       <Box display="flex" justifyContent="center" gap={2} mb={3}>
         <ButtonGroup fullWidth>
           <Button

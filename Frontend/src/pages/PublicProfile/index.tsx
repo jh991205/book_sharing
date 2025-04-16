@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getUserById, getReviewsByUser, User, Review } from "../../util";
+import Navigation from "../../components/Navigation";
 
 const PublicProfile = () => {
   const { profileId } = useParams<{ profileId: string }>();
@@ -32,7 +33,8 @@ const PublicProfile = () => {
 
   return (
     <div className="container mt-4">
-      <h1>{user.firstName}'s Public Profile</h1>
+      <Navigation />
+      <h1>{user.username}'s Public Profile</h1>
       <p>Username: {user.username}</p>
       <h3 className="mt-4">Reviews</h3>
       <ul>

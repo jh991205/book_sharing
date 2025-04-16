@@ -14,6 +14,7 @@ import {
   Book,
 } from "../../util";
 import { useNavigate } from "react-router-dom";
+import Navigation from "../../components/Navigation";
 
 const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -75,13 +76,25 @@ const Profile = () => {
     loadProfile();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (!user) return <p>You are not logged in.</p>;
+  if (loading)
+    return (
+      <div>
+        <Navigation />
+        <p>Loading...</p>
+      </div>
+    );
+  if (!user)
+    return (
+      <div>
+        <Navigation />
+        <p>You are not logged in.</p>
+      </div>
+    );
 
   return (
     <div className="container mt-4">
-      <h1>Welcome, {user.firstName}</h1>
-      <p>Username: {user.username}</p>
+      <Navigation />
+      <h1>Welcome, {user.username}</h1>
       <button className="btn btn-danger mt-3" onClick={handleLogout}>
         Logout
       </button>
@@ -89,9 +102,9 @@ const Profile = () => {
       <h3 className="mt-4">Your Reviews</h3>
       <ul>
         {reviews.map((review) => (
-          <li key={review._id}>
-            <strong>{review.bookDetail.name}</strong>: {review.contentReview}{" "}
-            (⭐ {review.ratings})
+          <li key={review?._id}>
+            <strong>{review?.bookDetail?.name}</strong>: {review?.contentReview}{" "}
+            ( {review.ratings})
           </li>
         ))}
       </ul>
@@ -105,7 +118,7 @@ const Profile = () => {
           <ul>
             {allUsers.map((u) => (
               <li key={u._id}>
-                {u.firstName} ({u.username})
+                {u.email} ({u.username})
                 <button
                   className="btn btn-sm btn-danger ms-2"
                   onClick={() => handleDeleteUser(u._id)}
@@ -136,12 +149,12 @@ const Profile = () => {
           <h4 className="mt-4">All Reviews</h4>
           <ul>
             {allReviews.map((r) => (
-              <li key={r._id}>
-                {r.user.firstName} on <strong>{r.bookDetail.name}</strong>:{" "}
-                {r.contentReview}
+              <li key={r?._id}>
+                {r?.user?.username} on <strong>{r?.bookDetail?.name}</strong>:{" "}
+                {r?.contentReview}
                 <button
                   className="btn btn-sm btn-danger ms-2"
-                  onClick={() => handleDeleteReview(r._id)}
+                  onClick={() => handleDeleteReview(r?._id)}
                 >
                   Delete
                 </button>

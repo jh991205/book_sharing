@@ -40,18 +40,17 @@ export default function UserRoutes(app) {
 
   // SIGNUP
   const signup = async (req, res) => {
-    const existing = await dao.findUserByUsername(req.body.email);
+    const existing = await dao.findUserByUsername(req.body.username);
     if (existing) {
-      res.status(400).json({ message: "Email already in use" });
+      res.status(400).json({ message: "Username already in use" });
       return;
     }
 
     const newUser = {
       _id: uuidv4(),
-      username: req.body.email, // store email as username
-      email: req.body.email,
+      username: req.body.username,
       password: req.body.password,
-      firstName: req.body.firstName,
+      email: req.body.email,
       role: "USER",
     };
 
