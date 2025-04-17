@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Navigation from "../../components/Navigation";
 import Post from "../../components/Post";
-import { getProfile, getRandomBooks, User, Book } from "../../util";
+import { getRandomBooks, User, Book } from "../../util";
+import { getProfile } from "../Profile/client";
 
 export default function Home() {
   const [books, setBooks] = useState<Book[]>([]);

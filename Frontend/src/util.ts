@@ -59,15 +59,6 @@ export const registerUser = async (payload: {
   return res.json() as Promise<User>;
 };
 
-export const getProfile = async () => {
-  const res = await fetch(`${REMOTE_SERVER}/api/users/profile`, {
-    method: "POST",
-    credentials: "include",
-  });
-  if (!res.ok) throw new Error("Not logged in");
-  return res.json() as Promise<User>;
-};
-
 // BOOKS
 export const getRandomBooks = async () => {
   const res = await fetch(`${REMOTE_SERVER}/api/books`);

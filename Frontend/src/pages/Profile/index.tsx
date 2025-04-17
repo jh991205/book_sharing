@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  getProfile,
   getReviewsByUser,
   logoutUser,
   getAllUsers,
@@ -13,9 +12,12 @@ import {
   Review,
   Book,
 } from "../../util";
+import { getProfile } from "./client";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../components/Navigation";
 import { updateUser } from "./client";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "./reducer";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -31,6 +33,7 @@ const Profile: React.FC = () => {
   const [updatedPassword, setUpdatedPassword] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -62,6 +65,7 @@ const Profile: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
+      dispatch(setCurrentUser(null));
       navigate("/login");
     } catch {
       alert("Logout failed");

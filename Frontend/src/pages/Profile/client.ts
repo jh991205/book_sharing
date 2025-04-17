@@ -13,3 +13,12 @@ export const updateUser = async (id: string, updates: Partial<User>) => {
   if (!res.ok) throw new Error("Update failed");
   return res.json();
 };
+
+export const getProfile = async () => {
+  const res = await fetch(`${REMOTE_SERVER}/api/users/profile`, {
+    method: "POST",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Not logged in");
+  return res.json() as Promise<User>;
+};
