@@ -1,7 +1,8 @@
 import model from "./model.js";
 
 // Create a new tag
-export const createTag = (tag) => model.create(tag);
+export const createTag = ({ review, user, type }) =>
+  model.create({ review, user, type, _id: `${user}-${review}` });
 
 // Find all tags (for admin/testing)
 export const findAllTags = () => model.find();
