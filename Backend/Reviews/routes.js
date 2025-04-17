@@ -7,8 +7,32 @@ export default function ReviewRoutes(app) {
   };
 
   const findAllReviews = async (req, res) => {
-    const reviews = await dao.findAllReviews();
-    res.json(reviews);
+    try {
+      const currentUser = req.session.currentUser;
+      if (!currentUser) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      let reviews = [];
+
+      if (currentUser.role === "SUPERADMIN") {
+        reviews = await dao.findAllReviews();
+      } else if (currentUser.role === "ADMIN") {
+        reviews = await dao.findReviewsForAdmin(
+          currentUser._id,
+          currentUser.role
+        );
+      } else if (currentUser.role === "USER") {
+        reviews = await dao.findReviewById(currentUser._id);
+      } else {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      res.json(reviews);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ message: "Something went wrong" });
+    }
   };
 
   const findReviewById = async (req, res) => {

@@ -5,6 +5,10 @@ export const createUser = (user) => model.create(user);
 
 // READ
 export const findAllUsers = () => model.find();
+export const findUsersByRole = (role) => model.find({ role });
+
+export const findUsersExcludingRole = (excludedRole) =>
+  model.find({ role: { $ne: excludedRole } });
 export const findUserById = (id) => model.findById(id);
 export const findUserByUsername = (username) => model.findOne({ username });
 export const findUserByCredentials = (username, password) =>

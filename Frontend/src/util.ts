@@ -6,6 +6,7 @@ export interface User {
   email: string;
   role: string;
   password: string;
+  followingList: string[];
 }
 
 export interface Book {

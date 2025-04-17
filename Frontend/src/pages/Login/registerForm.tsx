@@ -2,6 +2,8 @@ import { useState } from "react";
 import { TextField, Button, Typography, Box } from "@mui/material";
 import { registerUser } from "../../util";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../Profile/reducer";
 
 export default function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -9,6 +11,7 @@ export default function RegisterForm() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleRegister = async () => {
     if (password !== confirm) {
@@ -22,7 +25,7 @@ export default function RegisterForm() {
         password,
         email,
       });
-      alert(`Welcome ${user.username}`);
+      dispatch(setCurrentUser(user));
       navigate("/profile");
     } catch (err) {
       alert("Registration failed");

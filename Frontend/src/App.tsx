@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import PublicProfile from "./pages/PublicProfile";
 import Management from "./pages/Management";
 import ProtectedRoute from "./pages/protectedRoute";
+import ProtectedRouteManagement from "./pages/protectedRouteManagement";
 import { Provider } from "react-redux";
 import store from "./pages/store";
 import Session from "./pages/Profile/session";
@@ -33,7 +34,14 @@ export default function App() {
               }
             />
             <Route path="/profile/:profileId" element={<PublicProfile />} />
-            <Route path="/profile/management" element={<Management />} />
+            <Route
+              path="/profile/management"
+              element={
+                <ProtectedRouteManagement>
+                  <Management />
+                </ProtectedRouteManagement>
+              }
+            />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Session>

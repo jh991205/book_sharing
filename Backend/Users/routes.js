@@ -16,8 +16,25 @@ export default function UserRoutes(app) {
 
   // GET all / filtered
   const findAllUsers = async (req, res) => {
-    const users = await dao.findAllUsers();
-    res.json(users);
+    try {
+      const currentUser = req.session.currentUser; // or wherever you're storing session
+      if (!currentUser) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      let users = [];
+      if (currentUser.role === "SUPERADMIN") {
+        users = await dao.findUsersExcludingRole("SUPERADMIN");
+      } else if (currentUser.role === "ADMIN") {
+        users = await dao.findUsersByRole("USER");
+      } else {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      res.json(users);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ message: "Something went wrong" });
+    }
   };
 
   // GET one by ID

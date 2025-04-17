@@ -1,10 +1,18 @@
 import model from "./model.js";
+import userModel from "../Users/model.js";
 
 // CREATE
 export const createReview = (review) => model.create(review);
 
 // READ
 export const findAllReviews = () => model.find();
+export const findReviewsForAdmin = async (adminId) => {
+  const users = await userModel.find({ role: "USER" }, "_id");
+  const userIds = users.map((u) => u._id.toString());
+  userIds.push(adminId);
+  return model.find({ user: { $in: userIds } });
+};
+
 export const findReviewById = (id) => model.findById(id);
 
 export const findReviewsByUser = (userId) =>
