@@ -10,7 +10,7 @@ export interface User {
 
 export interface Book {
   _id: string;
-  name: string;
+  bookTitle: string;
 }
 
 export interface Review {

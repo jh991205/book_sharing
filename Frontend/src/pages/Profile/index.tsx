@@ -216,7 +216,6 @@ const Profile: React.FC = () => {
       {user.role === "ADMIN" && (
         <div className="mt-5">
           <h2>Admin Panel</h2>
-
           {/* USERS */}
           <h4>All Users</h4>
           <ul>
@@ -232,13 +231,13 @@ const Profile: React.FC = () => {
               </li>
             ))}
           </ul>
-
           {/* BOOKS */}
           <h4 className="mt-4">All Books</h4>
+
           <ul>
             {allBooks.map((b) => (
               <li key={b._id}>
-                {b.name}
+                {b.bookTitle}
                 <button
                   className="btn btn-sm btn-danger ms-2"
                   onClick={() => handleDeleteBook(b._id)}
@@ -248,7 +247,6 @@ const Profile: React.FC = () => {
               </li>
             ))}
           </ul>
-
           {/* REVIEWS */}
           <h4 className="mt-4">All Reviews</h4>
           <ul>

@@ -41,7 +41,7 @@ export default function Home() {
               <Post
                 key={book._id}
                 bookId={book._id}
-                title={book.name}
+                title={book.bookTitle}
                 summary="Check out this book!"
               />
             ))}
