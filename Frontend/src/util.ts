@@ -5,6 +5,7 @@ export interface User {
   username: string;
   email: string;
   role: string;
+  password: string;
 }
 
 export interface Book {
@@ -16,8 +17,8 @@ export interface Review {
   _id: string;
   contentReview: string;
   ratings: number;
-  user: User;
-  bookDetail: Book;
+  user: string;
+  bookTitle: String;
 }
 
 export const getUserById = async (id: string): Promise<User> => {
