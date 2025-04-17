@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import { FaStar, FaRegStar, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import * as client from "./client"; // Adjust the path if needed
 import Navigation from "../../components/Navigation";
 
 export default function Details() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { bookId } = useParams();
   const [searchParams] = useSearchParams();
   const canonicalTitle = searchParams.get("query");
@@ -77,6 +79,21 @@ export default function Details() {
       )
     );
 
+  const [genres, setGenres] = useState<{ _id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    async function fetchGenres() {
+      if (!canonicalTitle) return;
+      try {
+        const data = await client.getGenresForBook(canonicalTitle);
+        setGenres(data);
+      } catch (err) {
+        console.error("Error fetching genres:", err);
+      }
+    }
+    fetchGenres();
+  }, [canonicalTitle]);
+
   return (
     <div className="container mt-4">
       <Navigation />
@@ -98,6 +115,16 @@ export default function Details() {
           {/* Book Info Section */}
           <div className="col-md-8">
             <h2>{bookDetail.volumeInfo.title}</h2>
+            {genres.length > 0 && (
+              <div className="mb-3">
+                <strong>Genres:</strong>{" "}
+                {genres.map((g) => (
+                  <span key={g._id} className="badge bg-secondary me-1">
+                    {g.name}
+                  </span>
+                ))}
+              </div>
+            )}
             {bookDetail.volumeInfo.authors && (
               <h4>{bookDetail.volumeInfo.authors.join(", ")}</h4>
             )}
