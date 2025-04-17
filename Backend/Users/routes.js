@@ -37,6 +37,20 @@ export default function UserRoutes(app) {
     }
   };
 
+  const findUsersByIdsRoute = async (req, res) => {
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) {
+      return res.status(400).json({ message: "ids must be an array" });
+    }
+    try {
+      const users = await dao.findUsersByIds(ids);
+      res.json(users);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ message: "Could not fetch users" });
+    }
+  };
+
   // GET one by ID
   const findUserById = async (req, res) => {
     const user = await dao.findUserById(req.params.userId);
@@ -130,6 +144,7 @@ export default function UserRoutes(app) {
   app.get("/api/users/:userId", findUserById);
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
+  app.post("/api/users/batch", findUsersByIdsRoute);
 
   app.post("/api/users/signup", signup);
   app.post("/api/users/signin", signin);

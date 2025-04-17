@@ -14,6 +14,9 @@ export const findUserByUsername = (username) => model.findOne({ username });
 export const findUserByCredentials = (username, password) =>
   model.findOne({ username, password });
 
+export const findUsersByIds = (ids) =>
+  model.find({ _id: { $in: ids } }).select("_id username");
+
 // UPDATE
 export const updateUser = (id, updatedUser) =>
   model.updateOne({ _id: id }, { $set: updatedUser });
