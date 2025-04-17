@@ -40,8 +40,8 @@ const PublicProfile = () => {
       <ul>
         {reviews.map((review) => (
           <li key={review._id}>
-            <strong>{review.bookDetail.name}</strong>: {review.contentReview}{" "}
-            (⭐ {review.ratings})
+            <strong>{review.bookTitle}</strong>: {review.contentReview} (⭐{" "}
+            {review.ratings})
           </li>
         ))}
       </ul>
