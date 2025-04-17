@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { getReviewsByUser, logoutUser, User, Review } from "../../util";
+import { User, Review } from "../../util";
+import { getReviewsByUser } from "./client";
+import { logoutUser } from "../Login/client";
 import { getProfile } from "./client";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../components/Navigation";
