@@ -12,7 +12,7 @@ export const updateUser = async (id: string, updates: Partial<User>) => {
 };
 
 export const getProfile = async () => {
-  const response = await axiosWithCredentials.get(
+  const response = await axiosWithCredentials.post(
     `${REMOTE_SERVER}/api/users/profile`
   );
   return response.data;
