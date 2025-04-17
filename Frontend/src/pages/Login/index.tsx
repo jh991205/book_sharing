@@ -3,9 +3,16 @@ import LoginForm from "./loginForm";
 import RegisterForm from "./registerForm";
 import { Box, Button, ButtonGroup, Paper } from "@mui/material";
 import Navigation from "../../components/Navigation";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function Login() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  if (currentUser) {
+    navigate("/profile");
+  }
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 400, margin: "auto", mt: 6 }}>

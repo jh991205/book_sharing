@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  getProfile,
   getReviewsByUser,
   logoutUser,
   getAllUsers,
@@ -13,9 +12,12 @@ import {
   Review,
   Book,
 } from "../../util";
+import { getProfile } from "./client";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../components/Navigation";
 import { updateUser } from "./client";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "./reducer";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -31,6 +33,7 @@ const Profile: React.FC = () => {
   const [updatedPassword, setUpdatedPassword] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -62,6 +65,7 @@ const Profile: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
+      dispatch(setCurrentUser(null));
       navigate("/login");
     } catch {
       alert("Logout failed");
@@ -216,7 +220,6 @@ const Profile: React.FC = () => {
       {user.role === "ADMIN" && (
         <div className="mt-5">
           <h2>Admin Panel</h2>
-
           {/* USERS */}
           <h4>All Users</h4>
           <ul>
@@ -232,13 +235,13 @@ const Profile: React.FC = () => {
               </li>
             ))}
           </ul>
-
           {/* BOOKS */}
           <h4 className="mt-4">All Books</h4>
+
           <ul>
             {allBooks.map((b) => (
               <li key={b._id}>
-                {b.name}
+                {b.bookTitle}
                 <button
                   className="btn btn-sm btn-danger ms-2"
                   onClick={() => handleDeleteBook(b._id)}
@@ -248,7 +251,6 @@ const Profile: React.FC = () => {
               </li>
             ))}
           </ul>
-
           {/* REVIEWS */}
           <h4 className="mt-4">All Reviews</h4>
           <ul>

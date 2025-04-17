@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, HashRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
@@ -7,20 +7,37 @@ import Details from "./pages/Details";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import PublicProfile from "./pages/PublicProfile";
+import Management from "./pages/Management";
+import ProtectedRoute from "./pages/protectedRoute";
+import { Provider } from "react-redux";
+import store from "./pages/store";
+import Session from "./pages/Profile/session";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/search/:keyword" element={<Search />} />
-        <Route path="/details/:bookId" element={<Details />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/:profileId" element={<PublicProfile />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </BrowserRouter>
+    <HashRouter>
+      <Provider store={store}>
+        <Session>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/search/:keyword" element={<Search />} />
+            <Route path="/details/:bookId" element={<Details />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/profile/:profileId" element={<PublicProfile />} />
+            <Route path="/profile/management" element={<Management />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Session>
+      </Provider>
+    </HashRouter>
   );
 }

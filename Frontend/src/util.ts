@@ -10,7 +10,7 @@ export interface User {
 
 export interface Book {
   _id: string;
-  name: string;
+  bookTitle: string;
 }
 
 export interface Review {
@@ -56,15 +56,6 @@ export const registerUser = async (payload: {
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error("Register failed");
-  return res.json() as Promise<User>;
-};
-
-export const getProfile = async () => {
-  const res = await fetch(`${REMOTE_SERVER}/api/users/profile`, {
-    method: "POST",
-    credentials: "include",
-  });
-  if (!res.ok) throw new Error("Not logged in");
   return res.json() as Promise<User>;
 };
 
