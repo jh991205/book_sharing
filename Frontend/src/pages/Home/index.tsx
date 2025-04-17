@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react";
 import Navigation from "../../components/Navigation";
 import Post from "../../components/Post";
-import { getRandomBooks, User, Book } from "../../util";
-import { getProfile } from "../Profile/client";
+import { getRandomBooks, Book } from "../../util";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const [books, setBooks] = useState<Book[]>([]);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [user, books] = await Promise.all([
-          getProfile().catch(() => null),
-          getRandomBooks(),
-        ]);
-        setCurrentUser(user);
+        const books = await getRandomBooks();
         setBooks(books);
       } catch (err) {
         console.error("Error loading data", err);
@@ -33,10 +29,14 @@ export default function Home() {
       <div className="container mt-5">
         {loading ? (
           <p>Loading...</p>
-        ) : currentUser ? (
-          <p>Welcome back, {currentUser.username}!</p>
         ) : (
           <>
+            {currentUser && (
+              <div>
+                <p className="mb-4">Welcome back, {currentUser.username}!</p>
+                <p>{currentUser.followingList}</p>
+              </div>
+            )}
             <h2>Popular Books</h2>
             {books.map((book) => (
               <Post
