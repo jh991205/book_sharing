@@ -49,3 +49,20 @@ export const getGenresForBook = async (bookTitle: string) => {
   );
   return genres;
 };
+/**
+ * Like (or toggle) a particular review by the current user.
+ */
+export const likeReview = async (reviewId: string, userId: string) => {
+  const payload = { review: reviewId, user: userId, type: "like" };
+  const response = await axios.post(`${REMOTE_SERVER}/api/tags`, payload);
+  return response.data;
+};
+
+/**
+ * Dislike (or toggle) a particular review by the current user.
+ */
+export const dislikeReview = async (reviewId: string, userId: string) => {
+  const payload = { review: reviewId, user: userId, type: "dislike" };
+  const response = await axios.post(`${REMOTE_SERVER}/api/tags`, payload);
+  return response.data;
+};

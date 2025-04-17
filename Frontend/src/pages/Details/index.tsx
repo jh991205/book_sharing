@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useSearchParams } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useSearchParams,
+  useNavigate,
+} from "react-router-dom";
 import { FaStar, FaRegStar, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import * as client from "./client"; // Adjust the path if needed
@@ -47,21 +52,22 @@ export default function Details() {
 
   const [tags, setTags] = useState<any[]>([]);
 
-  // Fetch all tags related to the reviews on this book
-  useEffect(() => {
-    async function fetchTags() {
-      if (reviews.length > 0) {
-        try {
-          const allTags = await Promise.all(
-            reviews.map((r) => client.getTagsForReview(r._id))
-          );
-          const flattened = allTags.flat();
-          setTags(flattened);
-        } catch (error) {
-          console.error("Error fetching tags:", error);
-        }
+  async function fetchTags() {
+    if (reviews.length > 0) {
+      try {
+        const allTags = await Promise.all(
+          reviews.map((r) => client.getTagsForReview(r._id))
+        );
+        const flattened = allTags.flat();
+        setTags(flattened);
+      } catch (error) {
+        console.error("Error fetching tags:", error);
       }
     }
+  }
+
+  // Fetch all tags related to the reviews on this book
+  useEffect(() => {
     fetchTags();
   }, [reviews]);
 
@@ -93,6 +99,30 @@ export default function Details() {
     }
     fetchGenres();
   }, [canonicalTitle]);
+
+  const navigate = useNavigate();
+
+  const handleReaction = async (reviewId: string, type: "like" | "dislike") => {
+    if (!currentUser) {
+      const goLogin = window.confirm(
+        "You must be logged in to react. Would you like to go to the login page?"
+      );
+      if (goLogin) navigate("/login");
+      return;
+    }
+
+    try {
+      if (type === "like") {
+        await client.likeReview(reviewId);
+      } else {
+        await client.dislikeReview(reviewId);
+      }
+      // now refresh all tags for every review
+      await fetchTags();
+    } catch (err) {
+      console.error("Error sending reaction:", err);
+    }
+  };
 
   return (
     <div className="container mt-4">
@@ -167,12 +197,19 @@ export default function Details() {
                 </div>
                 <p>{review.contentReview}</p>
                 <div>
-                  <span className="me-3">
-                    <FaThumbsUp className="me-1" />{" "}
+                  <span
+                    className="me-3"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleReaction(review._id, "like")}
+                  >
+                    <FaThumbsUp className="me-1" />
                     {countTags(review._id, "like")}
                   </span>
-                  <span>
-                    <FaThumbsDown className="me-1" />{" "}
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleReaction(review._id, "dislike")}
+                  >
+                    <FaThumbsDown className="me-1" />
                     {countTags(review._id, "dislike")}
                   </span>
                 </div>
