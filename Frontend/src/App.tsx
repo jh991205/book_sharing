@@ -11,29 +11,32 @@ import Management from "./pages/Management";
 import ProtectedRoute from "./pages/protectedRoute";
 import { Provider } from "react-redux";
 import store from "./pages/store";
+import Session from "./pages/Profile/session";
 
 export default function App() {
   return (
     <HashRouter>
       <Provider store={store}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/search/:keyword" element={<Search />} />
-          <Route path="/details/:bookId" element={<Details />} />
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/profile/:profileId" element={<PublicProfile />} />
-          <Route path="/profile/management" element={<Management />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        <Session>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/search/:keyword" element={<Search />} />
+            <Route path="/details/:bookId" element={<Details />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/profile/:profileId" element={<PublicProfile />} />
+            <Route path="/profile/management" element={<Management />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Session>
       </Provider>
     </HashRouter>
   );
