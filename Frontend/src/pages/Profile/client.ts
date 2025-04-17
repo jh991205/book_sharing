@@ -1,24 +1,19 @@
 import { User } from "../../util";
-
+import axios from "axios";
 export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
+const axiosWithCredentials = axios.create({ withCredentials: true });
 
 export const updateUser = async (id: string, updates: Partial<User>) => {
-  const res = await fetch(`${REMOTE_SERVER}/api/users/${id}`, {
-    method: "PUT",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updates),
-  });
-
-  if (!res.ok) throw new Error("Update failed");
-  return res.json();
+  const response = await axiosWithCredentials.put(
+    `${REMOTE_SERVER}/api/users/${id}`,
+    updates
+  );
+  return response.data;
 };
 
 export const getProfile = async () => {
-  const res = await fetch(`${REMOTE_SERVER}/api/users/profile`, {
-    method: "POST",
-    credentials: "include",
-  });
-  if (!res.ok) throw new Error("Not logged in");
-  return res.json() as Promise<User>;
+  const response = await axiosWithCredentials.get(
+    `${REMOTE_SERVER}/api/users/profile`
+  );
+  return response.data;
 };

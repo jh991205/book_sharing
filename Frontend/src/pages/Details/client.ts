@@ -34,3 +34,18 @@ export const getTagsForReview = async (reviewId: string) => {
   );
   return response.data;
 };
+export const getGenresForBook = async (bookTitle: string) => {
+  // 1. Look up the book by title
+  const { data: book } = await axios.get(
+    `${REMOTE_SERVER}/api/books/title/${encodeURIComponent(bookTitle)}`
+  );
+
+  // If no book found, return empty array
+  if (!book) return [];
+
+  // 2. Fetch the genres by the book's ID
+  const { data: genres } = await axios.get(
+    `${REMOTE_SERVER}/api/book/${book._id}/genres`
+  );
+  return genres;
+};
