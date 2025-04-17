@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Navigation from "../../components/Navigation";
 import Post from "../../components/Post";
-import { getRandomBooks, Book } from "../../util";
+import { Book } from "../../util";
+import { getRandomBooks } from "./client";
 import { useSelector } from "react-redux";
 
 export default function Home() {

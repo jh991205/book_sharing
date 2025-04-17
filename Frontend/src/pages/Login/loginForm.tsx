@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TextField, Button, Typography, Box } from "@mui/material";
-import { loginUser } from "../../util";
+import { loginUser } from "./client";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../Profile/reducer";

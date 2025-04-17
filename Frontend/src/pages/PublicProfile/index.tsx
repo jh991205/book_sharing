@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUserById, getReviewsByUser, User, Review } from "../../util";
+import { User, Review } from "../../util";
+import { getUserById, getReviewsByUser } from "../Profile/client";
 import Navigation from "../../components/Navigation";
 
 const PublicProfile = () => {
