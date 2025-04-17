@@ -18,6 +18,14 @@ export const getProfile = async () => {
   return response.data;
 };
 
+export const getUsersByIds = async (ids: string[]): Promise<User[]> => {
+  const response = await axiosWithCredentials.post<User[]>(
+    `${REMOTE_SERVER}/api/users/batch`,
+    { ids }
+  );
+  return response.data;
+};
+
 export const getUserById = async (id: string): Promise<User> => {
   const response = await axiosWithCredentials.get<User>(
     `${REMOTE_SERVER}/api/users/${id}`
