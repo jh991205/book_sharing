@@ -1,8 +1,10 @@
 import model from "./model.js";
 import userModel from "../Users/model.js";
+import { v4 as uuidv4 } from "uuid";
 
 // CREATE
-export const createReview = (review) => model.create(review);
+export const createReview = (review) =>
+  model.create({ ...review, _id: uuidv4() });
 
 // READ
 export const findAllReviews = () => model.find();

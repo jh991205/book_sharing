@@ -66,3 +66,19 @@ export const dislikeReview = async (reviewId: string, userId: string) => {
   const response = await axios.post(`${REMOTE_SERVER}/api/tags`, payload);
   return response.data;
 };
+
+export const createReview = async (
+  bookTitle: string,
+  userId: string,
+  rating: number,
+  content: string
+) => {
+  const payload = {
+    bookTitle,
+    user: userId,
+    ratings: rating,
+    contentReview: content,
+  };
+  const { data } = await axios.post(`${REMOTE_SERVER}/api/reviews`, payload);
+  return data;
+};
