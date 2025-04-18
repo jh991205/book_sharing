@@ -32,3 +32,27 @@ export const getAllReviews = async (): Promise<Review[]> => {
 export const deleteReviewById = async (id: string): Promise<void> => {
   await axiosWithCredentials.delete(`${REMOTE_SERVER}/api/reviews/${id}`);
 };
+
+export const deleteReviewsByUser = async (userId: string): Promise<void> => {
+  await axiosWithCredentials.delete(
+    `${REMOTE_SERVER}/api/reviews/user/${userId}`
+  );
+};
+
+export const deleteTagsByUser = async (userId: string): Promise<void> => {
+  await axiosWithCredentials.delete(`${REMOTE_SERVER}/api/tags/user/${userId}`);
+};
+
+export const deleteCollectionsByUser = async (
+  userId: string
+): Promise<void> => {
+  await axiosWithCredentials.delete(
+    `${REMOTE_SERVER}/api/collections/user/${userId}`
+  );
+};
+
+export const deleteTagsByReview = async (reviewId: string): Promise<void> => {
+  await axiosWithCredentials.delete(
+    `${REMOTE_SERVER}/api/tags/review/${reviewId}`
+  );
+};

@@ -15,3 +15,5 @@ export const updateCollection = (id, updates) =>
 
 // DELETE
 export const deleteCollection = (id) => model.deleteOne({ _id: id });
+
+export const deleteCollectionsByUser = (userId) => model.deleteMany({ userId });

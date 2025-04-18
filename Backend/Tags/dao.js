@@ -24,4 +24,6 @@ export const updateTag = (id, updated) =>
 // Delete a tag (e.g., when toggling off)
 export const deleteTag = (id) => model.deleteOne({ _id: id });
 
-// Optionally: toggle a tag (logic usually belongs in controller)
+export const deleteTagsByUser = (userId) => model.deleteMany({ user: userId });
+export const deleteTagsByReview = (reviewId) =>
+  model.deleteMany({ review: reviewId });

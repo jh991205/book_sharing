@@ -51,4 +51,23 @@ export default function TagRoutes(app) {
     const result = await dao.deleteTag(req.params.tagId);
     res.json(result);
   });
+
+  app.delete("/api/tags/user/:userId", async (req, res) => {
+    try {
+      const result = await dao.deleteTagsByUser(req.params.userId);
+      res.json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Failed to delete tags for user" });
+    }
+  });
+  app.delete("/api/tags/review/:reviewId", async (req, res) => {
+    try {
+      const result = await dao.deleteTagsByReview(req.params.reviewId);
+      res.json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Failed to delete tags for review" });
+    }
+  });
 }
