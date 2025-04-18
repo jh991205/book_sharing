@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
-import { User, Review } from "../../util";
-import { getReviewsByUser, getUsersByIds, updateUser } from "./client";
+import { User, Review, Book } from "../../util";
+import {
+  getFollowedBooks,
+  getBooksByIds,
+  getReviewsByUser,
+  getUsersByIds,
+  updateUser,
+} from "./client";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../components/Navigation";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,6 +15,7 @@ import { setCurrentUser } from "./reducer";
 export default function Profile() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [followingUsers, setFollowingUsers] = useState<User[]>([]);
+  const [followedBooks, setFollowedBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedEmail, setUpdatedEmail] = useState("");
@@ -23,10 +30,16 @@ export default function Profile() {
     async function loadProfile() {
       try {
         setReviews(await getReviewsByUser(user._id));
+
         if (user.followingList?.length) {
           const users = await getUsersByIds(user.followingList);
           setFollowingUsers(users);
         }
+
+        const collections = await getFollowedBooks(user._id);
+        const bookIds = collections.map((c: any) => c.bookId);
+        const books = await getBooksByIds(bookIds);
+        setFollowedBooks(books);
       } catch (err) {
         console.error(err);
       } finally {
@@ -87,6 +100,7 @@ export default function Profile() {
     <div className="container mt-4">
       <Navigation />
       <h1>Welcome, {user.username}</h1>
+
       <div className="d-flex gap-2 mb-3">
         {canManage && (
           <button
@@ -97,6 +111,7 @@ export default function Profile() {
           </button>
         )}
       </div>
+
       <section className="mb-4">
         <h4>Following</h4>
         {followingUsers.length > 0 ? (
@@ -116,6 +131,7 @@ export default function Profile() {
           <p className="text-muted">You’re not following anyone yet.</p>
         )}
       </section>
+
       <section className="mb-4">
         <h4>Account Info</h4>
         {!isEditing ? (
@@ -124,7 +140,7 @@ export default function Profile() {
               <strong>Email:</strong> {user.email}
             </p>
             <p>
-              <strong>Password:</strong> ******
+              <strong>Password:</strong> ******{/* Masked for security */}
             </p>
             <button className="btn btn-secondary" onClick={handleEditClick}>
               Edit Info
@@ -171,6 +187,29 @@ export default function Profile() {
           </>
         )}
       </section>
+
+      <section className="mb-4">
+        <h4>Collected Books</h4>
+        {followedBooks.length > 0 ? (
+          <ul className="list-group">
+            {followedBooks.map((book) => (
+              <li
+                key={book._id}
+                className="list-group-item list-group-item-action"
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  navigate(`/search/${encodeURIComponent(book.bookTitle)}`)
+                }
+              >
+                <strong>{book.bookTitle}</strong>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-muted">You’re not following any books yet.</p>
+        )}
+      </section>
+
       <section>
         <h3>Your Reviews</h3>
         <ul>
