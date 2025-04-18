@@ -1,5 +1,7 @@
 import { User, Review } from "../../util";
 import axios from "axios";
+import { Book } from "../../util";
+
 export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 const axiosWithCredentials = axios.create({ withCredentials: true });
 
@@ -36,6 +38,21 @@ export const getUserById = async (id: string): Promise<User> => {
 export const getReviewsByUser = async (id: string): Promise<Review[]> => {
   const response = await axiosWithCredentials.get<Review[]>(
     `${REMOTE_SERVER}/api/reviews/user/${id}`
+  );
+  return response.data;
+};
+
+export const getFollowedBooks = async (userId: string) => {
+  const response = await axiosWithCredentials.get(
+    `${REMOTE_SERVER}/api/collections/user/${userId}`
+  );
+  return response.data;
+};
+
+export const getBooksByIds = async (ids: string[]): Promise<Book[]> => {
+  const response = await axiosWithCredentials.post<Book[]>(
+    `${REMOTE_SERVER}/api/books/batch`,
+    { ids }
   );
   return response.data;
 };

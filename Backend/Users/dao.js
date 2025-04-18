@@ -22,7 +22,14 @@ export const updateUser = (id, updatedUser) =>
   model.updateOne({ _id: id }, { $set: updatedUser });
 
 // DELETE
-export const deleteUser = (id) => model.deleteOne({ _id: id });
+export const deleteUser = async (id) => {
+  await model.updateMany(
+    { followingList: id },
+    { $pull: { followingList: id } }
+  );
+
+  return model.deleteOne({ _id: id });
+};
 
 // FOLLOWING
 export const followUser = (userId, followId) =>

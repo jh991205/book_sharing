@@ -44,6 +44,20 @@ export default function BookRoutes(app) {
     res.json(books);
   };
 
+  const findBooksByIds = async (req, res) => {
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) {
+      return res.status(400).json({ message: "ids must be an array" });
+    }
+
+    try {
+      const books = await dao.findBooksByIds(ids);
+      res.json(books);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch books" });
+    }
+  };
+
   app.post("/api/books", createBook);
   app.get("/api/books", findAllBooks);
   app.get("/api/books/:bookId", findBookById);
@@ -51,4 +65,5 @@ export default function BookRoutes(app) {
   app.get("/api/books/search/:partial", findBooksByPartialTitle);
   app.put("/api/books/:bookId", updateBook);
   app.delete("/api/books/:bookId", deleteBook);
+  app.post("/api/books/batch", findBooksByIds);
 }

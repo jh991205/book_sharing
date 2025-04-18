@@ -28,3 +28,6 @@ export const findBooksByPartialTitle = (partialTitle) => {
   const regex = new RegExp(partialTitle, "i");
   return model.find({ bookTitle: { $regex: regex } });
 };
+
+export const findBooksByIds = (ids) =>
+  model.find({ _id: { $in: ids } }).select("_id bookTitle");
