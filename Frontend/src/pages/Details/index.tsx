@@ -9,6 +9,7 @@ import { FaStar, FaRegStar, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import * as client from "./client"; // Adjust the path if needed
 import Navigation from "../../components/Navigation";
+import { getUserById } from "../Profile/client";
 
 export default function Details() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -17,6 +18,7 @@ export default function Details() {
   const canonicalTitle = searchParams.get("query");
   const [bookDetail, setBookDetail] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewAuthors, setReviewAuthors] = useState<Record<string, any>>({});
 
   // Fetch book details from the Google Books API using bookId.
   useEffect(() => {
@@ -49,6 +51,13 @@ export default function Details() {
     }
     fetchReviews();
   }, [bookDetail, canonicalTitle]);
+
+  useEffect(() => {
+    const ids = Array.from(new Set(reviews.map((r) => r.user)));
+    Promise.all(
+      ids.map((id) => getUserById(id).then((u: any) => [id, u]))
+    ).then((entries) => setReviewAuthors(Object.fromEntries(entries)));
+  }, [reviews]);
 
   const [tags, setTags] = useState<any[]>([]);
 
@@ -242,7 +251,10 @@ export default function Details() {
                 <div className="mb-2">
                   {renderStars(review.ratings)}
                   <span className="ms-3 text-muted">
-                    by <Link to={`/profile/${review.user}`}>{review.user}</Link>
+                    by{" "}
+                    <Link to={`/profile/${review.user}`}>
+                      {reviewAuthors[review.user]?.username || review.user}
+                    </Link>
                   </span>
                 </div>
                 <p>{review.contentReview}</p>
