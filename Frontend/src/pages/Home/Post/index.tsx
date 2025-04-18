@@ -7,13 +7,13 @@ type PostProps = {
   summary: string;
 };
 
-export default function Post({ bookId, title, summary }: PostProps) {
+export default function Post({ title, summary }: PostProps) {
   return (
     <Card
       variant="outlined"
       sx={{ mb: 2, textDecoration: "none" }}
       component={Link}
-      to={`/details/${bookId}`}
+      to={`/search/${encodeURIComponent(title)}`}
     >
       <CardContent>
         <Typography variant="h6">{title}</Typography>

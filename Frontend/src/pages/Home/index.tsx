@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
 import Navigation from "../../components/Navigation";
-import Post from "../../components/Post";
-import { Book } from "../../util";
+import Post from "./Post";
+import { Book, Review } from "../../util";
 import { getRandomBooks } from "./client";
 import { useSelector } from "react-redux";
+import { getReviewsByUser } from "../Profile/client";
 
 export default function Home() {
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+  const user = useSelector((state: any) => state.accountReducer.currentUser);
 
   useEffect(() => {
     const load = async () => {
       try {
         const books = await getRandomBooks();
         setBooks(books);
+        setReviews(await getReviewsByUser(user._id));
       } catch (err) {
         console.error("Error loading data", err);
       } finally {
@@ -35,7 +40,17 @@ export default function Home() {
             {currentUser && (
               <div>
                 <p className="mb-4">Welcome back, {currentUser.username}!</p>
-                <p>{currentUser.followingList}</p>
+                <section>
+                  <h3>Your Reviews</h3>
+                  <ul>
+                    {reviews.map((rv: any) => (
+                      <li key={rv._id}>
+                        <strong>{rv.bookTitle}</strong>: {rv.contentReview} (
+                        {rv.ratings})
+                      </li>
+                    ))}
+                  </ul>
+                </section>
               </div>
             )}
             <h2>Popular Books</h2>
