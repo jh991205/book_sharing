@@ -52,6 +52,16 @@ export default function CollectionsRoutes(app) {
     res.json(status);
   };
 
+  const bulkdelete = async (req, res) => {
+    try {
+      const result = await dao.deleteCollectionsByUser(req.params.userId);
+      res.json(result);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Failed to delete collections for user" });
+    }
+  };
+
   // Routes
   app.post("/api/collections", createCollection);
   app.get("/api/collections", findAllCollections);
@@ -60,4 +70,5 @@ export default function CollectionsRoutes(app) {
   app.get("/api/collections/book/:bookId", findCollectionsByBook);
   app.put("/api/collections/:collectionId", updateCollection);
   app.delete("/api/collections/:collectionId", deleteCollection);
+  app.delete("/api/collections/user/:userId", bulkdelete);
 }

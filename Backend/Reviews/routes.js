@@ -61,6 +61,11 @@ export default function ReviewRoutes(app) {
     res.json(status);
   };
 
+  const deleteReviewsByUser = async (req, res) => {
+    const status = await dao.deleteReviewsByUser(req.params.userId);
+    res.json(status);
+  };
+
   // Routes
   app.post("/api/reviews", createReview);
   app.get("/api/reviews", findAllReviews);
@@ -70,4 +75,5 @@ export default function ReviewRoutes(app) {
   app.get("/api/reviews/book/:bookTitle", findReviewsByBook);
   app.put("/api/reviews/:reviewId", updateReview);
   app.delete("/api/reviews/:reviewId", deleteReview);
+  app.delete("/api/reviews/user/:userId", deleteReviewsByUser);
 }

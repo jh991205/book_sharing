@@ -56,3 +56,23 @@ export const getBooksByIds = async (ids: string[]): Promise<Book[]> => {
   );
   return response.data;
 };
+
+export const updateReview = async (
+  reviewId: string,
+  updates: Partial<Review>
+): Promise<Review> => {
+  const res = await axiosWithCredentials.put<Review>(
+    `${REMOTE_SERVER}/api/reviews/${reviewId}`,
+    updates
+  );
+  return res.data;
+};
+
+export const deleteReview = async (
+  reviewId: string
+): Promise<{ success: boolean }> => {
+  const res = await axiosWithCredentials.delete<{ success: boolean }>(
+    `${REMOTE_SERVER}/api/reviews/${reviewId}`
+  );
+  return res.data;
+};

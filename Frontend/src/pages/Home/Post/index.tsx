@@ -1,24 +1,59 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 
 type PostProps = {
   bookId: string;
   title: string;
   summary: string;
+  coverUrl?: string;
 };
 
-export default function Post({ title, summary }: PostProps) {
+export default function Post({ title, summary, coverUrl }: PostProps) {
   return (
     <Card
-      variant="outlined"
-      sx={{ mb: 2, textDecoration: "none" }}
-      component={Link}
-      to={`/search/${encodeURIComponent(title)}`}
+      elevation={2}
+      sx={{
+        mb: 2,
+        borderRadius: 2,
+        transition: "transform 0.2s, box-shadow 0.2s",
+        "&:hover": {
+          transform: "scale(1.03)",
+          boxShadow: 6,
+        },
+      }}
     >
-      <CardContent>
-        <Typography variant="h6">{title}</Typography>
-        <Typography variant="body2">{summary}</Typography>
-      </CardContent>
+      <CardActionArea
+        component={Link}
+        to={`/search/${encodeURIComponent(title)}`}
+      >
+        {coverUrl && (
+          <CardMedia
+            component="img"
+            height="140"
+            image={coverUrl}
+            alt={title}
+          />
+        )}
+        <CardContent>
+          <Typography variant="h6" gutterBottom noWrap title={title}>
+            {title}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            noWrap
+            title={summary}
+          >
+            {summary}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
     </Card>
   );
 }

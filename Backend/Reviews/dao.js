@@ -29,3 +29,12 @@ export const updateReview = (id, updatedReview) =>
 
 // DELETE
 export const deleteReview = (id) => model.deleteOne({ _id: id });
+export const deleteReviewsByUser = (userId) =>
+  model.deleteMany({ user: userId });
+
+export const deleteReviewsByBook = async (bookTitle) => {
+  const docs = await model.find({ bookTitle }, "_id");
+  const ids = docs.map((doc) => doc._id.toString());
+  await model.deleteMany({ bookTitle });
+  return ids;
+};
