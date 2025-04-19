@@ -25,7 +25,7 @@ import {
   deleteCollectionsByUser,
   deleteTagsByReview,
 } from "./client";
-import { updateUser } from "../Profile/client";
+import { updateUser, getUsersByIds } from "../Profile/client";
 import { User, Book, Review } from "../../util";
 
 export default function Management() {
@@ -33,6 +33,7 @@ export default function Management() {
   const [users, setUsers] = useState<User[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [usernameMap, setUsernameMap] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const currentUser = useSelector(
@@ -56,6 +57,19 @@ export default function Management() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (!reviews.length) return;
+    (async () => {
+      const ids = Array.from(new Set(reviews.map((r) => r.user)));
+      const userData = await getUsersByIds(ids);
+      const map: { [key: string]: string } = {};
+      userData.forEach((u) => {
+        map[u._id] = u.username;
+      });
+      setUsernameMap(map);
+    })();
+  }, [reviews]);
 
   const handleRoleToggle = async (user: User) => {
     const newRole = user.role === "USER" ? "ADMIN" : "USER";
@@ -152,7 +166,13 @@ export default function Management() {
   ];
 
   const reviewColumns: GridColDef[] = [
-    { field: "user", headerName: "User ID", flex: 1 },
+    {
+      field: "user",
+      headerName: "User",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<Review>) =>
+        usernameMap[params.row.user] || params.row.user,
+    },
     { field: "bookTitle", headerName: "Book", flex: 1 },
     { field: "contentReview", headerName: "Review", flex: 2 },
     {
@@ -173,18 +193,14 @@ export default function Management() {
     },
   ];
 
-  if (loading) {
-    return (
-      <>
-        <Navigation />
-        <Typography align="center" mt={4}>
-          Loading admin data…
-        </Typography>
-      </>
-    );
-  }
-
-  return (
+  return loading ? (
+    <>
+      <Navigation />
+      <Typography align="center" mt={4}>
+        Loading admin data…
+      </Typography>
+    </>
+  ) : (
     <Box sx={{ width: "70vw" }}>
       <Navigation />
       <Button onClick={() => navigate(-1)} sx={{ mb: 2 }}>
@@ -205,7 +221,6 @@ export default function Management() {
           <Tab label="Reviews" />
         </Tabs>
       </Paper>
-
       {tab === 0 && (
         <Box sx={{ width: "100%", overflowX: "auto" }}>
           <Box sx={{ minWidth: 650 }}>
@@ -228,7 +243,6 @@ export default function Management() {
           </Box>
         </Box>
       )}
-
       {tab === 1 && (
         <Box sx={{ width: "100%", overflowX: "auto" }}>
           <Box sx={{ minWidth: 650 }}>
@@ -251,7 +265,6 @@ export default function Management() {
           </Box>
         </Box>
       )}
-
       {tab === 2 && (
         <Box sx={{ width: "100%", overflowX: "auto" }}>
           <Box sx={{ minWidth: 650 }}>
