@@ -112,16 +112,29 @@ export default function PublicProfile() {
       <Box sx={{ width: "70vw", mx: "auto", p: 2 }}>
         <Paper elevation={3} sx={{ p: 2, mb: 4 }}>
           <Typography variant="h5" gutterBottom>
-            {user.username}’s Profile
+            <Box
+              component="span"
+              sx={{
+                fontWeight: "bold",
+                color: "primary.main",
+                bgcolor: "action.hover",
+                px: 1,
+                borderRadius: 1,
+              }}
+            >
+              {user.username}
+            </Box>
           </Typography>
-          <Button
-            variant={isFollowing ? "outlined" : "contained"}
-            color={isFollowing ? "error" : "primary"}
-            onClick={handleToggleFollow}
-            sx={{ mb: 2 }}
-          >
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Button>
+          {currentUser && (
+            <Button
+              variant={isFollowing ? "outlined" : "contained"}
+              color={isFollowing ? "error" : "primary"}
+              onClick={handleToggleFollow}
+              sx={{ mb: 2 }}
+            >
+              {isFollowing ? "Unfollow" : "Follow"}
+            </Button>
+          )}
 
           <Typography variant="h6" gutterBottom>
             Reviews

@@ -91,69 +91,84 @@ export default function BookSearch() {
       alert("Something went wrong.");
     }
   };
-
   return (
     <div className="container mt-4">
       <Navigation />
-      <div className="d-flex">
-        <div className="d-none d-md-block" style={{ width: "300px" }}>
-          <BookFilter onSearch={searchBooks} />
-        </div>
 
-        <div className="flex-fill" style={{ padding: "1rem" }}>
-          {currentUser && bookId && (
-            <div className="mb-3">
-              <button
-                className={`btn ${
-                  isFollowed(bookId) ? "btn-danger" : "btn-success"
-                }`}
-                onClick={handleToggleFollow}
-              >
-                {isFollowed(bookId)
-                  ? "Remove from Collection"
-                  : "Add to Collection"}
-              </button>
-            </div>
-          )}
+      <div className="row">
+        {currentUser && bookId && (
+          <div className="mb-3 text-end">
+            <button
+              className={`btn ${
+                isFollowed(bookId) ? "btn-danger" : "btn-success"
+              }`}
+              onClick={handleToggleFollow}
+            >
+              {isFollowed(bookId)
+                ? "Remove from Collection"
+                : "Add to Collection"}
+            </button>
+          </div>
+        )}
+      </div>
 
-          <div
-            style={{ overflowY: "auto", maxHeight: "100vh" }}
-            className="row mt-4"
-          >
+      <div className="row">
+        {/* Sidebar: hidden on xs/sm */}
+        <aside className="d-none d-lg-block col-lg-3">
+          <BookFilter onSearch={searchBooks} noBook = {books.length === 0}/>
+        </aside>
+
+        {/* Main content */}
+        <main className="col-12 col-lg-9">
+          {/* responsive 1‑2‑3‑4 column grid */}
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
             {books
-              .filter((book) => book.volumeInfo?.imageLinks?.thumbnail)
+              .filter((b) => b.volumeInfo?.imageLinks?.thumbnail)
               .map((book) => (
-                <div key={book.id} className="col-4 mb-4">
-                  <div className="card mb-2">
+                <div
+                  key={book.id}
+                  className="col"
+                  style={{ maxWidth: "300px" }}
+                >
+                  <div className="card h-100">
                     <img
                       src={book.volumeInfo.imageLinks.thumbnail}
                       alt={book.volumeInfo.title}
                       className="card-img-top"
+                      style={{ objectFit: "cover", height: "200px" }}
                     />
-                    <div className="card-body d-flex flex-column">
-                      <h5 className="card-title">{book.volumeInfo.title}</h5>
-                      <p className="card-text">
-                        {book.volumeInfo.description
-                          ? book.volumeInfo.description.substring(0, 100) +
-                            "..."
-                          : "No description available."}
+                    <div className="card-body d-flex flex-column pb-0">
+                      <h5 className="card-title text-truncate">
+                        {book.volumeInfo.title}
+                      </h5>
+                      <p
+                        className="card-text flex-fill"
+                        style={{
+                          WebkitLineClamp: 3,
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {book.volumeInfo.description ||
+                          "No description available."}
                       </p>
-                      <div className="mt-auto d-flex flex-wrap gap-2">
+                      <div className="mt-auto d-flex justify-content-end flex-nowrap gap-2">
                         <a
                           href={book.volumeInfo.infoLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn btn-primary"
+                          className="btn btn-primary btn-sm flex-shrink-0"
                         >
-                          More Info
+                          Link
                         </a>
                         <Link
                           to={`/details/${book.id}?query=${encodeURIComponent(
                             keyword || ""
                           )}`}
-                          className="btn btn-secondary"
+                          className="btn btn-secondary btn-sm flex-shrink-0"
                         >
-                          View Details
+                          Details
                         </Link>
                       </div>
                     </div>
@@ -161,7 +176,7 @@ export default function BookSearch() {
                 </div>
               ))}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

@@ -139,23 +139,22 @@ export default function Details() {
         t.review === reviewId && t.user === currentUser?._id && t.type === type
     );
 
-  const [showAddForm, setShowAddForm] = useState(false);
   const [newRating, setNewRating] = useState(0);
   const [newContent, setNewContent] = useState("");
 
-  const handleInitAdd = () => {
-    if (!currentUser) {
-      if (
-        window.confirm(
-          "You must be logged in to add a review. Go to login now?"
-        )
-      ) {
-        navigate("/login");
-      }
-    } else {
-      setShowAddForm(true);
-    }
-  };
+  function firstNWordsFromHtml(html: string, n: number): string {
+    // 1. Convert to plain text
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    const text = div.textContent || div.innerText || "";
+
+    // 2. Split and slice
+    const words = text.trim().split(/\s+/);
+    const slice = words.slice(0, n).join(" ");
+
+    // 3. Append ellipsis if needed
+    return words.length > n ? slice + "…" : slice;
+  }
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,7 +171,6 @@ export default function Details() {
         canonicalTitle || bookDetail.volumeInfo.title
       );
       setReviews(reviewsData);
-      setShowAddForm(false);
       setNewRating(0);
       setNewContent("");
     } catch (err) {
@@ -187,11 +185,22 @@ export default function Details() {
         <div className="row">
           {/* Book Cover Section */}
           <div className="col-md-4">
-            {bookDetail.volumeInfo?.imageLinks?.thumbnail ? (
+            {bookDetail.volumeInfo?.imageLinks ? (
               <img
-                src={bookDetail.volumeInfo.imageLinks.thumbnail}
+                // pick the largest available size, falling back to thumbnail
+                src={
+                  bookDetail.volumeInfo.imageLinks.extraLarge ||
+                  bookDetail.volumeInfo.imageLinks.large ||
+                  bookDetail.volumeInfo.imageLinks.medium ||
+                  bookDetail.volumeInfo.imageLinks.thumbnail
+                }
                 alt={bookDetail.volumeInfo.title}
                 className="img-fluid"
+                style={{
+                  width: "100%", // fill the column
+                  maxHeight: "600px", // optional cap
+                  objectFit: "contain", // preserve aspect ratio
+                }}
               />
             ) : (
               <p>No Image Available</p>
@@ -214,12 +223,17 @@ export default function Details() {
             {bookDetail.volumeInfo.authors && (
               <h4>{bookDetail.volumeInfo.authors.join(", ")}</h4>
             )}
-            <p>{bookDetail.volumeInfo.description}</p>
+            <p>
+              {firstNWordsFromHtml(
+                bookDetail.volumeInfo.description || "",
+                300
+              )}
+            </p>
             <p>
               <strong>Publisher:</strong> {bookDetail.volumeInfo.publisher}
             </p>
             <p>
-              <strong>Published Date:</strong>{" "}
+              <strong>Published Date:</strong>
               {bookDetail.volumeInfo.publishedDate}
             </p>
             <a
@@ -241,9 +255,6 @@ export default function Details() {
       {/* Reviews Section */}
       <div className="reviews mt-4">
         <h3>User Reviews</h3>
-        <button className="btn btn-success mb-3" onClick={handleInitAdd}>
-          + Add Review
-        </button>
         {reviews.length > 0 ? (
           reviews.map((review) => (
             <div key={review._id} className="card mb-3">
@@ -295,10 +306,11 @@ export default function Details() {
         ) : (
           <p>No reviews yet for this book. Be the first to review!</p>
         )}
-        {showAddForm && (
+
+        {currentUser ? (
           <form onSubmit={handleSubmitReview} className="card p-3 mb-4">
             <div className="mb-2">
-              <strong>Rating:</strong>{" "}
+              <strong>Rating:</strong>
               {[1, 2, 3, 4, 5].map((n) => (
                 <FaStar
                   key={n}
@@ -323,14 +335,16 @@ export default function Details() {
             <button type="submit" className="btn btn-primary me-2">
               Submit
             </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => setShowAddForm(false)}
-            >
-              Cancel
-            </button>
           </form>
+        ) : (
+          <div className="alert alert-info d-flex justify-content-between align-items-center mb-4">
+            <span>
+              Please <Link to="/login">log in</Link> to add a review.
+            </span>
+            <Link to="/login" className="btn btn-sm btn-outline-primary">
+              Login
+            </Link>
+          </div>
         )}
       </div>
     </div>
