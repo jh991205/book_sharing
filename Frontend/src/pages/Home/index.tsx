@@ -7,11 +7,13 @@ import {
   Paper,
   List,
   ListItem,
+  ListItemText,
+  ListItemButton,
   CircularProgress,
   Rating,
 } from "@mui/material";
 import { Book, Review, User } from "../../util";
-import { getRandomBooks } from "./client";
+import { getRandomBooks, getGenres, getBooksByGenre } from "./client";
 import { likeReview, dislikeReview, getTagsForReview } from "../Details/client";
 import { getReviewsByUser, getUsersByIds } from "../Profile/client";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
@@ -19,6 +21,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const [genres, setGenres] = useState<string[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const [reviews, setReviews] = useState<
     (Review & { authorUsername: string })[]
   >([]);
@@ -104,6 +108,30 @@ export default function Home() {
       console.error("Error sending reaction", err);
     }
   };
+  // 1a. Load all genres once
+  useEffect(() => {
+    async function loadGenres() {
+      const list = await getGenres();
+      setGenres(list);
+      if (list.length) setSelectedGenre(list[0]);
+    }
+    loadGenres();
+  }, []);
+
+  // 1b. Whenever selectedGenre changes, fetch & pick 5 random
+  useEffect(() => {
+    if (!selectedGenre) return;
+    async function loadRandomBooks() {
+      // Option A: fetch *all* books then sample client‑side
+      const all = await getBooksByGenre(selectedGenre!);
+      setBooks(all);
+
+      // Option B: if your API supports it, ask backend for random 5:
+      // const randomFive = await bookClient.getRandomBooksByGenre(selectedGenre, 5);
+      // setBooks(randomFive);
+    }
+    loadRandomBooks();
+  }, [selectedGenre]);
 
   return (
     <Box>
@@ -206,11 +234,43 @@ export default function Home() {
             ) : null}
 
             {/* Books Section */}
-            <Typography variant="h5" gutterBottom>
-              Popular Books
-            </Typography>
-            <Paper elevation={3} sx={{ width: "100%" }}>
-              <Box>
+            <Paper
+              elevation={3}
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" }, // stack on xs, row from md up
+                width: "100%",
+                maxHeight: 600,
+              }}
+            >
+              {/* Sidebar */}
+              <Box
+                component="nav"
+                sx={{
+                  display: { xs: "none", md: "block" }, // hide below md
+                  width: 240,
+                  bgcolor: "background.paper",
+                  borderRight: 1,
+                  borderColor: "divider",
+                  overflowY: "auto",
+                }}
+              >
+                <List>
+                  {genres.map((genre) => (
+                    <ListItem key={genre} disablePadding>
+                      <ListItemButton
+                        selected={genre === selectedGenre}
+                        onClick={() => setSelectedGenre(genre)}
+                      >
+                        <ListItemText primary={genre} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+
+              {/* Main content always shows */}
+              <Box sx={{ flexGrow: 1, p: 2, overflowY: "auto" }}>
                 {books.map((book) => (
                   <Box key={book._id} sx={{ mb: 2 }}>
                     <Post

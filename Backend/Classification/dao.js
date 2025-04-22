@@ -12,7 +12,8 @@ export const findGenresByBook = async (bookId) => {
 /**
  * Find all books associated with a given genre
  */
-export const findBooksByGenre = async (genreId) => {
+export const findBooksByGenre = async (genre) => {
+  const genreId = await GenreModel.findOne({ name: genre }).select("_id");
   const classifications = await model.find({ genreId }).populate("bookId");
   return classifications.map((c) => c.bookId);
 };

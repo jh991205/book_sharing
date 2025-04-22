@@ -57,10 +57,10 @@ export default function ClassificationRoutes(app) {
   });
 
   // Get all books for a genre
-  app.get("/genre/:genreId/books", async (req, res, next) => {
-    const { genreId } = req.params;
+  app.get("/api/genre/:genre/books", async (req, res, next) => {
+    const { genre } = req.params;
     try {
-      const books = await dao.findBooksByGenre(genreId);
+      const books = await dao.findBooksByGenre(genre);
       res.json(books);
     } catch (err) {
       next(err);

@@ -6,8 +6,10 @@ import * as bookClient from "./client";
 // and triggers the parent component's searchBooks function.
 export default function BookFilter({
   onSearch,
+  noBook,
 }: {
   onSearch: (query: string) => void;
+  noBook: boolean;
 }) {
   const [options, setOptions] = useState<string[]>([]);
   const [selected, setSelected] = useState("");
@@ -41,7 +43,13 @@ export default function BookFilter({
   };
 
   return (
-    <div className="d-flex flex-column mb-3" style={{ width: "300px" }}>
+    <div
+      className="d-flex flex-column mb-3"
+      style={{
+        // if noBook, lock width to 300px; otherwise let it size naturally
+        width: noBook ? "300px" : "auto",
+      }}
+    >
       <input
         type="text"
         placeholder="Type to search..."
