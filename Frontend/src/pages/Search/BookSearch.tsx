@@ -114,10 +114,15 @@ export default function BookSearch() {
 
       <div className="row">
         {/* Sidebar: hidden on xs/sm */}
-        <aside className="d-none d-lg-block col-lg-3">
-          <BookFilter onSearch={searchBooks} noBook = {books.length === 0}/>
-        </aside>
-
+        {books.length === 0 ? (
+          <aside>
+            <BookFilter onSearch={searchBooks} noBook={true} />
+          </aside>
+        ) : (
+          <aside className="d-none d-lg-block col-lg-3">
+            <BookFilter onSearch={searchBooks} noBook={false} />
+          </aside>
+        )}
         {/* Main content */}
         <main className="col-12 col-lg-9">
           {/* responsive 1‑2‑3‑4 column grid */}
