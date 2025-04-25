@@ -17,6 +17,7 @@ import { getReviewsByUser, getUsersByIds } from "../Profile/client";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer";
 
 export default function Home() {
   const [reviews, setReviews] = useState<
@@ -225,6 +226,7 @@ export default function Home() {
           </>
         )}
       </Box>
+      <Footer></Footer>
     </Box>
   );
 }

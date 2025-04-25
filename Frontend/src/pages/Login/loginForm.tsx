@@ -33,7 +33,7 @@ export default function LoginForm() {
         Login
       </Typography>
       <TextField
-        label="Email"
+        label="Username"
         fullWidth
         margin="normal"
         value={email}
